@@ -1,3 +1,4 @@
+require('dotenv').config()
 const User = require('../models/user')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
@@ -7,11 +8,11 @@ exports.signup = (req, res, next) => {
     .then(hash => {
       const user = new User({
         email: req.body.email,
-        password: hash,
+        password: hash
         // imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
       })
       user.save()
-        .then(() => res.status(201).json({ message: 'Utilisateur crée !' }))
+        .then(() => res.status(201).json({ message: 'Utilisateur créée !' }))
         .catch(error => res.status(400).json({ error }))
     })
     .catch(error => res.status(500).json({ error }))
@@ -32,7 +33,7 @@ exports.login = (req, res, next) => {
             userId: user._id,
             token: jwt.sign(
               { userId: user._id },
-              'RAMDOM_TOKEN_SECRET',
+              process.env.AUTH_TOKEN,
               { expiresIn: '24h' }
             )
           })
